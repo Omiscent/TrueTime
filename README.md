@@ -50,6 +50,15 @@ cargo tauri build
 
 Output installers land in `src-tauri/target/release/bundle/`.
 
+### Run tests
+
+```sh
+npm test          # run once
+npm run test:watch
+```
+
+Covers the time-math and mutual-exclusion logic in `useStopwatches` and the `formatTime` formatter.
+
 ## Tech stack
 
 - [Tauri v2](https://tauri.app) — native shell, packaging, and installers
