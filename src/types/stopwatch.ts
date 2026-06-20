@@ -8,4 +8,6 @@ export interface Stopwatch {
   accumulatedTime: number;
   /** Unix epoch ms when the stopwatch was last started; null when not running. */
   lastStartedTimestamp: number | null;
+  /** Unix epoch ms of the last create/start/pause/reset; drives most-recently-used ordering. */
+  lastActiveAt: number | null;
 }

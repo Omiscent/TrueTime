@@ -10,6 +10,7 @@ function makeStopwatch(overrides: Partial<Stopwatch> = {}): Stopwatch {
     status: 'stopped',
     accumulatedTime: 0,
     lastStartedTimestamp: null,
+    lastActiveAt: null,
     ...overrides,
   };
 }
@@ -58,5 +59,28 @@ describe('StopwatchList ordering', () => {
 
     const names = screen.getAllByRole('heading', { level: 3 }).map((el) => el.textContent);
     expect(names).toEqual(['Beta', 'Alpha', 'Gamma', 'Delta']);
+  });
+
+  it('orders non-running stopwatches by most recently used first', () => {
+    const stopwatches = [
+      makeStopwatch({ id: 'a', name: 'Alpha', lastActiveAt: 1_000 }),
+      makeStopwatch({ id: 'b', name: 'Beta', lastActiveAt: 3_000 }),
+      makeStopwatch({ id: 'c', name: 'Gamma', lastActiveAt: null }),
+      makeStopwatch({ id: 'd', name: 'Delta', lastActiveAt: 2_000 }),
+    ];
+
+    render(
+      <StopwatchList
+        stopwatches={stopwatches}
+        onStart={vi.fn()}
+        onPause={vi.fn()}
+        onReset={vi.fn()}
+        onDelete={vi.fn()}
+        onRename={vi.fn()}
+      />
+    );
+
+    const names = screen.getAllByRole('heading', { level: 3 }).map((el) => el.textContent);
+    expect(names).toEqual(['Beta', 'Delta', 'Alpha', 'Gamma']);
   });
 });

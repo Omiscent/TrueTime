@@ -26,11 +26,14 @@ export function StopwatchList({
     );
   }
 
-  // Mutual exclusion guarantees at most one running stopwatch; a stable
-  // sort just floats it to the top without disturbing the order of the rest.
-  const ordered = [...stopwatches].sort((a, b) =>
-    Number(b.status === 'running') - Number(a.status === 'running')
-  );
+  // The running stopwatch (mutual exclusion guarantees at most one) always
+  // floats to the top; the rest are ordered most- to least-recently-used.
+  const ordered = [...stopwatches].sort((a, b) => {
+    if ((a.status === 'running') !== (b.status === 'running')) {
+      return a.status === 'running' ? -1 : 1;
+    }
+    return (b.lastActiveAt ?? 0) - (a.lastActiveAt ?? 0);
+  });
 
   return (
     <div className="mt-4 flex flex-col gap-3">

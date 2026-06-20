@@ -10,6 +10,7 @@ function makeStopwatch(overrides: Partial<Stopwatch> = {}): Stopwatch {
     status: 'stopped',
     accumulatedTime: 0,
     lastStartedTimestamp: null,
+    lastActiveAt: null,
     ...overrides,
   };
 }
