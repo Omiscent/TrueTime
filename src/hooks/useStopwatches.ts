@@ -37,6 +37,7 @@ export function useStopwatches() {
       status: 'stopped',
       accumulatedTime: 0,
       lastStartedTimestamp: null,
+      lastActiveAt: Date.now(),
     };
     setStopwatches((prev) => [...prev, stopwatch]);
   }, []);
@@ -55,7 +56,7 @@ export function useStopwatches() {
       prev.map((sw) => {
         if (sw.id === id) {
           if (sw.status === 'running') return sw;
-          return { ...sw, status: 'running', lastStartedTimestamp: now };
+          return { ...sw, status: 'running', lastStartedTimestamp: now, lastActiveAt: now };
         }
         if (sw.status === 'running' && sw.lastStartedTimestamp !== null) {
           return {
@@ -63,6 +64,7 @@ export function useStopwatches() {
             status: 'paused',
             accumulatedTime: sw.accumulatedTime + (now - sw.lastStartedTimestamp),
             lastStartedTimestamp: null,
+            lastActiveAt: now,
           };
         }
         return sw;
@@ -82,21 +84,29 @@ export function useStopwatches() {
           status: 'paused',
           accumulatedTime: sw.accumulatedTime + (now - sw.lastStartedTimestamp),
           lastStartedTimestamp: null,
+          lastActiveAt: now,
         };
       })
     );
   }, []);
 
   const resetStopwatch = useCallback((id: string) => {
+    const now = Date.now();
     setStopwatches((prev) =>
       prev.map((sw) =>
-        sw.id === id ? { ...sw, status: 'stopped', accumulatedTime: 0, lastStartedTimestamp: null } : sw
+        sw.id === id
+          ? { ...sw, status: 'stopped', accumulatedTime: 0, lastStartedTimestamp: null, lastActiveAt: now }
+          : sw
       )
     );
   }, []);
 
   const deleteStopwatch = useCallback((id: string) => {
     setStopwatches((prev) => prev.filter((sw) => sw.id !== id));
+  }, []);
+
+  const clearAllStopwatches = useCallback(() => {
+    setStopwatches([]);
   }, []);
 
   return {
@@ -107,5 +117,6 @@ export function useStopwatches() {
     pauseStopwatch,
     resetStopwatch,
     deleteStopwatch,
+    clearAllStopwatches,
   };
 }

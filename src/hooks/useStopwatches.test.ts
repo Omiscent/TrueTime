@@ -12,6 +12,7 @@ describe('useStopwatches', () => {
   });
 
   it('creates a stopwatch with sensible defaults', () => {
+    vi.spyOn(Date, 'now').mockReturnValue(1_000);
     const { result } = renderHook(() => useStopwatches());
 
     act(() => {
@@ -24,6 +25,7 @@ describe('useStopwatches', () => {
       status: 'stopped',
       accumulatedTime: 0,
       lastStartedTimestamp: null,
+      lastActiveAt: 1_000,
     });
     expect(result.current.stopwatches[0].id).toBeTruthy();
   });
@@ -73,6 +75,7 @@ describe('useStopwatches', () => {
     expect(result.current.stopwatches[0]).toMatchObject({
       status: 'running',
       lastStartedTimestamp: 1_000,
+      lastActiveAt: 1_000,
     });
   });
 
@@ -104,10 +107,12 @@ describe('useStopwatches', () => {
       status: 'paused',
       accumulatedTime: 2_500,
       lastStartedTimestamp: null,
+      lastActiveAt: 2_500,
     });
     expect(runningB).toMatchObject({
       status: 'running',
       lastStartedTimestamp: 2_500,
+      lastActiveAt: 2_500,
     });
   });
 
@@ -157,6 +162,7 @@ describe('useStopwatches', () => {
       status: 'paused',
       accumulatedTime: 3_000,
       lastStartedTimestamp: null,
+      lastActiveAt: 4_000,
     });
 
     // Pausing an already-paused stopwatch is a no-op.
@@ -220,6 +226,7 @@ describe('useStopwatches', () => {
       status: 'stopped',
       accumulatedTime: 0,
       lastStartedTimestamp: null,
+      lastActiveAt: 9_000,
     });
   });
 
