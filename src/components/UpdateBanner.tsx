@@ -13,7 +13,7 @@ export function UpdateBanner() {
 
   return (
     <div className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-indigo-500/40 bg-indigo-500/10 px-4 py-2.5 text-sm">
-      <span className="text-indigo-200">
+      <span className="text-indigo-700 dark:text-indigo-200">
         {status === 'available' && `Update available: v${update?.version}`}
         {status === 'downloading' && `Downloading update${percent !== null ? ` (${percent}%)` : '…'}`}
         {status === 'installing' && 'Installing update…'}

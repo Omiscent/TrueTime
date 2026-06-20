@@ -40,16 +40,20 @@ export function StopwatchCard({
   return (
     <div
       className={`rounded-xl border p-4 transition-colors ${
-        isRunning ? 'border-indigo-500/60 bg-indigo-500/5' : 'border-slate-800 bg-slate-900'
+        isRunning
+          ? 'border-indigo-500/60 bg-indigo-500/5'
+          : 'border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900'
       }`}
     >
       {isConfirmingDelete ? (
         <div className="flex items-center justify-between gap-2">
-          <span className="truncate text-sm text-slate-300">Delete &ldquo;{stopwatch.name}&rdquo;?</span>
+          <span className="truncate text-sm text-slate-600 dark:text-slate-300">
+            Delete &ldquo;{stopwatch.name}&rdquo;?
+          </span>
           <div className="flex shrink-0 gap-2">
             <button
               onClick={() => setIsConfirmingDelete(false)}
-              className="rounded-md bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-300 transition-colors hover:bg-slate-700"
+              className="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
             >
               Cancel
             </button>
@@ -76,10 +80,12 @@ export function StopwatchCard({
                   setIsEditing(false);
                 }
               }}
-              className="flex-1 rounded-md bg-slate-800 px-2 py-1 text-sm font-medium text-slate-100 outline-none ring-1 ring-indigo-500"
+              className="flex-1 rounded-md bg-slate-100 px-2 py-1 text-sm font-medium text-slate-900 outline-none ring-1 ring-indigo-500 dark:bg-slate-800 dark:text-slate-100"
             />
           ) : (
-            <h3 className="flex-1 truncate text-sm font-medium text-slate-200">{stopwatch.name}</h3>
+            <h3 className="flex-1 truncate text-sm font-medium text-slate-700 dark:text-slate-200">
+              {stopwatch.name}
+            </h3>
           )}
           <button
             onClick={() => {
@@ -87,7 +93,7 @@ export function StopwatchCard({
               setIsEditing((prev) => !prev);
             }}
             aria-label="Rename stopwatch"
-            className="rounded-md p-1.5 text-slate-500 transition-colors hover:bg-slate-800 hover:text-slate-300"
+            className="rounded-md p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-300"
           >
             <PencilIcon />
           </button>
@@ -103,7 +109,7 @@ export function StopwatchCard({
 
       <p
         className={`mt-3 font-mono text-3xl tabular-nums ${
-          isRunning ? 'text-indigo-300' : 'text-slate-100'
+          isRunning ? 'text-indigo-600 dark:text-indigo-300' : 'text-slate-900 dark:text-slate-100'
         }`}
       >
         {formatTime(elapsed)}
@@ -122,7 +128,7 @@ export function StopwatchCard({
         </button>
         <button
           onClick={() => onReset(stopwatch.id)}
-          className="flex-1 rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-700"
+          className="flex-1 rounded-lg bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
         >
           Reset
         </button>
