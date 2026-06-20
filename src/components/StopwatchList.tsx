@@ -26,9 +26,15 @@ export function StopwatchList({
     );
   }
 
+  // Mutual exclusion guarantees at most one running stopwatch; a stable
+  // sort just floats it to the top without disturbing the order of the rest.
+  const ordered = [...stopwatches].sort((a, b) =>
+    Number(b.status === 'running') - Number(a.status === 'running')
+  );
+
   return (
     <div className="mt-4 flex flex-col gap-3">
-      {stopwatches.map((stopwatch) => (
+      {ordered.map((stopwatch) => (
         <StopwatchCard
           key={stopwatch.id}
           stopwatch={stopwatch}
