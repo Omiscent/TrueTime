@@ -41,6 +41,7 @@ export function StopwatchList({
 }: StopwatchListProps) {
   const { sortStrategy, setSortStrategy } = useSortStrategy();
   const [isConfirmingClearAll, setIsConfirmingClearAll] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   if (stopwatches.length === 0) {
     return (
@@ -50,12 +51,19 @@ export function StopwatchList({
     );
   }
 
+  // createdIndex is captured against the full, unfiltered list up front so
+  // the "Date created" strategy stays correct even once search narrows it.
+  const indexed = stopwatches.map((stopwatch, createdIndex) => ({ stopwatch, createdIndex }));
+
+  const trimmedQuery = searchQuery.trim().toLowerCase();
+  const visible = trimmedQuery
+    ? indexed.filter((entry) => entry.stopwatch.name.toLowerCase().includes(trimmedQuery))
+    : indexed;
+
   // The running stopwatch (mutual exclusion guarantees at most one) always
-  // floats to the top regardless of strategy; the rest follow the chosen
-  // strategy. createdIndex captures insertion order up front since sorting
-  // below would otherwise erase it.
-  const ordered = stopwatches
-    .map((stopwatch, createdIndex) => ({ stopwatch, createdIndex }))
+  // floats to the top regardless of strategy, but only among what search
+  // left visible — a running stopwatch that doesn't match search stays hidden.
+  const ordered = [...visible]
     .sort((a, b) => {
       if ((a.stopwatch.status === 'running') !== (b.stopwatch.status === 'running')) {
         return a.stopwatch.status === 'running' ? -1 : 1;
@@ -66,6 +74,28 @@ export function StopwatchList({
 
   return (
     <div className="mt-4">
+      {stopwatches.length > 1 && (
+        <div className="relative mb-2">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search stopwatches..."
+            aria-label="Search stopwatches"
+            className="w-full rounded-lg bg-white px-3 py-2 pr-8 text-sm text-slate-900 placeholder:text-slate-400 outline-none ring-1 ring-slate-200 transition-shadow focus:ring-2 focus:ring-indigo-500 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 dark:ring-slate-700"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              aria-label="Clear search"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+            >
+              <XIcon />
+            </button>
+          )}
+        </div>
+      )}
+
       {stopwatches.length > 1 && (
         <div className="mb-2 flex items-center justify-between gap-2">
           {isConfirmingClearAll ? (
@@ -119,19 +149,33 @@ export function StopwatchList({
         </div>
       )}
 
-      <div className="flex flex-col gap-3">
-        {ordered.map((stopwatch) => (
-          <StopwatchCard
-            key={stopwatch.id}
-            stopwatch={stopwatch}
-            onStart={onStart}
-            onPause={onPause}
-            onReset={onReset}
-            onDelete={onDelete}
-            onRename={onRename}
-          />
-        ))}
-      </div>
+      {ordered.length === 0 ? (
+        <p className="mt-6 text-center text-sm text-slate-500">
+          No stopwatches match &ldquo;{searchQuery}&rdquo;.
+        </p>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {ordered.map((stopwatch) => (
+            <StopwatchCard
+              key={stopwatch.id}
+              stopwatch={stopwatch}
+              onStart={onStart}
+              onPause={onPause}
+              onReset={onReset}
+              onDelete={onDelete}
+              onRename={onRename}
+            />
+          ))}
+        </div>
+      )}
     </div>
+  );
+}
+
+function XIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+      <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+    </svg>
   );
 }

@@ -207,3 +207,101 @@ describe('StopwatchList clear all', () => {
     expect(props.onClearAll).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('StopwatchList search', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('hides the search box with 0 or 1 stopwatches and shows it with 2+', () => {
+    const { rerender, props } = renderList([]);
+    expect(screen.queryByLabelText('Search stopwatches')).not.toBeInTheDocument();
+
+    rerender(<StopwatchList stopwatches={[makeStopwatch({ id: 'a', name: 'Alpha' })]} {...props} />);
+    expect(screen.queryByLabelText('Search stopwatches')).not.toBeInTheDocument();
+
+    rerender(
+      <StopwatchList
+        stopwatches={[makeStopwatch({ id: 'a', name: 'Alpha' }), makeStopwatch({ id: 'b', name: 'Beta' })]}
+        {...props}
+      />
+    );
+    expect(screen.getByLabelText('Search stopwatches')).toBeInTheDocument();
+  });
+
+  it('filters by a case-insensitive substring match on name', () => {
+    renderList([
+      makeStopwatch({ id: 'a', name: 'Morning Run' }),
+      makeStopwatch({ id: 'b', name: 'Reading' }),
+      makeStopwatch({ id: 'c', name: 'Evening run' }),
+    ]);
+
+    fireEvent.change(screen.getByLabelText('Search stopwatches'), { target: { value: 'run' } });
+
+    expect(names()).toEqual(['Morning Run', 'Evening run']);
+  });
+
+  it('shows a "no matches" message instead of the empty-state copy when search has no hits', () => {
+    renderList([
+      makeStopwatch({ id: 'a', name: 'Alpha' }),
+      makeStopwatch({ id: 'b', name: 'Beta' }),
+    ]);
+
+    fireEvent.change(screen.getByLabelText('Search stopwatches'), { target: { value: 'zzz' } });
+
+    expect(screen.getByText('No stopwatches match “zzz”.')).toBeInTheDocument();
+    expect(screen.queryByText(/Create one above/)).not.toBeInTheDocument();
+  });
+
+  it('hides a running stopwatch that does not match the search query', () => {
+    renderList([
+      makeStopwatch({ id: 'a', name: 'Alpha', status: 'running', lastStartedTimestamp: Date.now() }),
+      makeStopwatch({ id: 'b', name: 'Beta' }),
+    ]);
+
+    fireEvent.change(screen.getByLabelText('Search stopwatches'), { target: { value: 'beta' } });
+
+    expect(names()).toEqual(['Beta']);
+  });
+
+  it('clears the search query via the clear button', () => {
+    renderList([
+      makeStopwatch({ id: 'a', name: 'Alpha' }),
+      makeStopwatch({ id: 'b', name: 'Beta' }),
+    ]);
+
+    const input = screen.getByLabelText('Search stopwatches');
+    fireEvent.change(input, { target: { value: 'alpha' } });
+    expect(names()).toEqual(['Alpha']);
+
+    fireEvent.click(screen.getByLabelText('Clear search'));
+
+    expect(input).toHaveValue('');
+    expect(names()).toEqual(['Alpha', 'Beta']);
+  });
+
+  it('does not show the clear button when the query is empty', () => {
+    renderList([
+      makeStopwatch({ id: 'a', name: 'Alpha' }),
+      makeStopwatch({ id: 'b', name: 'Beta' }),
+    ]);
+
+    expect(screen.queryByLabelText('Clear search')).not.toBeInTheDocument();
+  });
+
+  it('keeps true creation order for the "created" strategy even while filtered', () => {
+    renderList([
+      makeStopwatch({ id: 'a', name: 'Zeta Run' }),
+      makeStopwatch({ id: 'b', name: 'Other' }),
+      makeStopwatch({ id: 'c', name: 'Alpha Run' }),
+    ]);
+
+    fireEvent.change(screen.getByLabelText('Sort by'), { target: { value: 'created' } });
+    fireEvent.change(screen.getByLabelText('Search stopwatches'), { target: { value: 'run' } });
+
+    // "Zeta Run" was created before "Alpha Run", so created-order keeps it
+    // first even though "Other" (created in between) is filtered out and
+    // alphabetical order would put "Alpha Run" first.
+    expect(names()).toEqual(['Zeta Run', 'Alpha Run']);
+  });
+});
