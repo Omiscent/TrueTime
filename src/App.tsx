@@ -21,7 +21,9 @@ export default function App() {
       <div className="mx-auto max-w-md">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-xl font-semibold tracking-tight">TrueTime</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+              True<span className="text-teal-500 dark:text-teal-400">Time</span>
+            </h1>
             <p className="mt-1 text-sm text-slate-500">Only one stopwatch can run at a time.</p>
           </div>
           <ThemeToggle />
