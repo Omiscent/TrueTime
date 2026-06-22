@@ -75,77 +75,77 @@ export function StopwatchList({
   return (
     <div className="mt-4">
       {stopwatches.length > 1 && (
-        <div className="relative mb-2">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search stopwatches..."
-            aria-label="Search stopwatches"
-            className="w-full rounded-lg bg-white px-3 py-2 pr-8 text-sm text-slate-900 placeholder:text-slate-400 outline-none ring-1 ring-slate-200 transition-shadow focus:ring-2 focus:ring-indigo-500 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 dark:ring-slate-700"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              aria-label="Clear search"
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
-            >
-              <XIcon />
-            </button>
-          )}
-        </div>
-      )}
-
-      {stopwatches.length > 1 && (
-        <div className="mb-2 flex items-center justify-between gap-2">
-          {isConfirmingClearAll ? (
-            <>
-              <span className="truncate text-xs text-slate-600 dark:text-slate-300">
-                Delete all {stopwatches.length} stopwatches?
-              </span>
-              <div className="flex shrink-0 gap-2">
-                <button
-                  onClick={() => setIsConfirmingClearAll(false)}
-                  className="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => {
-                    onClearAll();
-                    setIsConfirmingClearAll(false);
-                  }}
-                  className="rounded-md bg-red-500/90 px-2.5 py-1 text-xs font-medium text-slate-950 transition-colors hover:bg-red-400"
-                >
-                  Delete all
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
+        <div className="mb-4 rounded-xl border border-slate-200 bg-slate-100/60 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+          <div className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search stopwatches..."
+              aria-label="Search stopwatches"
+              className="w-full rounded-lg bg-white px-3 py-2 pr-8 text-sm text-slate-900 placeholder:text-slate-400 outline-none ring-1 ring-slate-200 transition-shadow focus:ring-2 focus:ring-teal-500 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 dark:ring-slate-700"
+            />
+            {searchQuery && (
               <button
-                onClick={() => setIsConfirmingClearAll(true)}
-                className="text-xs text-slate-500 transition-colors hover:text-red-500 dark:text-slate-400 dark:hover:text-red-400"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
               >
-                Clear all
+                <XIcon />
               </button>
-              <div className="flex items-center gap-2">
-                <label htmlFor="sort-strategy" className="text-xs text-slate-500">
-                  Sort by
-                </label>
-                <select
-                  id="sort-strategy"
-                  value={sortStrategy}
-                  onChange={(e) => setSortStrategy(e.target.value as SortStrategy)}
-                  className="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs text-slate-600 outline-none transition-shadow focus:ring-2 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            )}
+          </div>
+
+          <div className="mt-2.5 flex items-center justify-between gap-2 px-0.5">
+            {isConfirmingClearAll ? (
+              <>
+                <span className="truncate text-xs text-slate-600 dark:text-slate-300">
+                  Delete all {stopwatches.length} stopwatches?
+                </span>
+                <div className="flex shrink-0 gap-2">
+                  <button
+                    onClick={() => setIsConfirmingClearAll(false)}
+                    className="rounded-md bg-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      onClearAll();
+                      setIsConfirmingClearAll(false);
+                    }}
+                    className="rounded-md bg-red-600 px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-red-500"
+                  >
+                    Delete all
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setIsConfirmingClearAll(true)}
+                  className="text-xs font-medium text-slate-500 transition-colors hover:text-red-500 dark:text-slate-400 dark:hover:text-red-400"
                 >
-                  <option value="recent">Recently used</option>
-                  <option value="created">Date created</option>
-                  <option value="name">Name (A&ndash;Z)</option>
-                </select>
-              </div>
-            </>
-          )}
+                  Clear all
+                </button>
+                <div className="flex items-center gap-2">
+                  <label htmlFor="sort-strategy" className="text-xs text-slate-500">
+                    Sort by
+                  </label>
+                  <select
+                    id="sort-strategy"
+                    value={sortStrategy}
+                    onChange={(e) => setSortStrategy(e.target.value as SortStrategy)}
+                    className="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs text-slate-600 outline-none transition-shadow focus:ring-2 focus:ring-teal-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                  >
+                    <option value="recent">Recently used</option>
+                    <option value="created">Date created</option>
+                    <option value="name">Name (A&ndash;Z)</option>
+                  </select>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       )}
 

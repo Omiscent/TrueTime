@@ -39,10 +39,10 @@ export function StopwatchCard({
 
   return (
     <div
-      className={`rounded-xl border p-4 transition-colors ${
+      className={`rounded-2xl border p-5 shadow-sm transition-all ${
         isRunning
-          ? 'border-indigo-500/60 bg-indigo-500/5'
-          : 'border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900'
+          ? 'border-teal-500/50 bg-teal-50/60 shadow-teal-500/10 dark:border-teal-400/40 dark:bg-teal-500/[0.07] dark:shadow-none'
+          : 'border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 dark:shadow-none'
       }`}
     >
       {isConfirmingDelete ? (
@@ -59,7 +59,7 @@ export function StopwatchCard({
             </button>
             <button
               onClick={() => onDelete(stopwatch.id)}
-              className="rounded-md bg-red-500/90 px-2.5 py-1 text-xs font-medium text-slate-950 transition-colors hover:bg-red-400"
+              className="rounded-md bg-red-600 px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-red-500"
             >
               Delete
             </button>
@@ -80,7 +80,7 @@ export function StopwatchCard({
                   setIsEditing(false);
                 }
               }}
-              className="flex-1 rounded-md bg-slate-100 px-2 py-1 text-sm font-medium text-slate-900 outline-none ring-1 ring-indigo-500 dark:bg-slate-800 dark:text-slate-100"
+              className="flex-1 rounded-md bg-slate-100 px-2 py-1 text-sm font-medium text-slate-900 outline-none ring-1 ring-teal-500 dark:bg-slate-800 dark:text-slate-100"
             />
           ) : (
             <h3 className="flex-1 truncate text-sm font-medium text-slate-700 dark:text-slate-200">
@@ -100,7 +100,7 @@ export function StopwatchCard({
           <button
             onClick={() => setIsConfirmingDelete(true)}
             aria-label="Delete stopwatch"
-            className="rounded-md p-1.5 text-slate-500 transition-colors hover:bg-red-500/10 hover:text-red-400"
+            className="rounded-md p-1.5 text-slate-500 transition-colors hover:bg-red-500/10 hover:text-red-500"
           >
             <TrashIcon />
           </button>
@@ -108,8 +108,8 @@ export function StopwatchCard({
       )}
 
       <p
-        className={`mt-3 font-mono text-3xl tabular-nums ${
-          isRunning ? 'text-indigo-600 dark:text-indigo-300' : 'text-slate-900 dark:text-slate-100'
+        className={`mt-4 font-mono text-4xl font-semibold tracking-tight tabular-nums ${
+          isRunning ? 'text-teal-600 dark:text-teal-300' : 'text-slate-900 dark:text-slate-100'
         }`}
       >
         {formatTime(elapsed)}
@@ -118,17 +118,15 @@ export function StopwatchCard({
       <div className="mt-4 flex gap-2">
         <button
           onClick={() => (isRunning ? onPause(stopwatch.id) : onStart(stopwatch.id))}
-          className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-            isRunning
-              ? 'bg-amber-500/90 text-slate-950 hover:bg-amber-400'
-              : 'bg-emerald-500/90 text-slate-950 hover:bg-emerald-400'
+          className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium text-white transition-colors ${
+            isRunning ? 'bg-amber-500 hover:bg-amber-400' : 'bg-teal-600 hover:bg-teal-500'
           }`}
         >
           {isRunning ? 'Pause' : 'Start'}
         </button>
         <button
           onClick={() => onReset(stopwatch.id)}
-          className="flex-1 rounded-lg bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+          className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
         >
           Reset
         </button>
