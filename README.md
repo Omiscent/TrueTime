@@ -16,6 +16,16 @@ Grab the installer for your OS from the [Releases page](https://github.com/omid-
 
 No Node.js or Rust needed to just run the app — those are only required if you want to build it from source.
 
+## Run as a self-hosted web app (Docker)
+
+The native desktop app is the primary way to use TrueTime, but the same UI can also run as a self-hosted web service — handy if you want it reachable from a browser on your own server or network instead of installed locally.
+
+```sh
+docker compose up -d
+```
+
+Then open `http://localhost:8080`. It's the same React UI served by nginx instead of wrapped in a native window — no system window/taskbar integration and no installer, just a browser tab. You redeploy a new version by rebuilding the image. Stopwatch state still persists per-browser via `localStorage`, exactly like the desktop app.
+
 ## Development
 
 ### Prerequisites
@@ -90,6 +100,7 @@ src/
   components/               UI: list, card, create form
 src-tauri/                  Rust/Tauri native shell
 .github/workflows/          cross-platform release builds (on version tags)
+Dockerfile                  builds + serves the web version (nginx)
 ```
 
 ## Contributing
